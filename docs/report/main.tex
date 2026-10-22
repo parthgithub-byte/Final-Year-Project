@@ -324,7 +324,7 @@ where $x_j$ ranges over the scores that are available.
 Ten papers and references are reviewed in Section~\ref{sec:litsurvey} of Chapter~3.
 
 \section{Plan of Project Execution}
-The ten-month plan from the approved synopsis is reproduced in Section~\ref{sec:schedule} of Chapter~5, together with the 15-day plan for Stage~1.
+The ten-month plan from the approved synopsis is reproduced in Section~\ref{sec:schedule} of Chapter~5, together with the week-by-week plan for Stage~1 (September to the start of November 2026).
 
 %===================================================================
 \chapter{Technical Keywords}
@@ -442,7 +442,7 @@ Fraud analysts spend a large share of their time collecting evidence for alerts 
 \section{Major Constraints}
 \begin{itemize}
   \item Only synthetic data may be used; no real personal or banking data.
-  \item Stage~1 has about 15 working days and four developers, so the scope is a proof of concept.
+  \item Stage~1 runs for about ten weeks (September to the start of November 2026) with four part-time student developers, so the scope is a proof of concept.
   \item The chat model is reached through the OpenRouter API; rate limits and network failures must not stop the demo (a built-in fake model is used as a fallback).
   \item Embeddings run locally (about 100 MB model download on first use).
   \item The language model must never take the final decision, and every state change must be audited.
@@ -505,36 +505,37 @@ Sr. No. & Parameter & Minimum requirement & Justification \\ \hline
 %===================================================================
 
 \section{Project Estimates}
-The waterfall model is followed: requirements, design, implementation, testing, documentation. Stage~1 is a 15 working-day sprint by four developers; the complete project runs over ten months.
+The waterfall model is followed: requirements, design, implementation, testing, documentation. Stage~1 runs for ten weeks, from September to the start of November 2026, with four developers working part-time alongside their academic load (about three productive days per week each); the complete project runs over ten months. Reviews with the internal guide are scheduled at the end of Weeks~3, 6 and 10.
 
 \subsection{Reconciled Estimates}
 \subsubsection{Cost Estimate}
 All software used is free or open source. The only recurring cost is the OpenRouter API usage for the chat model, which is kept small by using a low-cost model and a built-in fake model for tests and demos.
 \begin{table}[H]
 \centering
-\begin{tabular}{|l|l|}
+\begin{tabularx}{\textwidth}{|X|X|}
 \hline
 \textbf{Item} & \textbf{Estimated cost} \\ \hline
 Software licences (Node.js, MongoDB, Chroma, React, VS Code) & Rs.~0 (open source) \\ \hline
 OpenRouter API credits (development and demo) & \todo{team to fix a budget} \\ \hline
 Hardware & Existing student laptops \\ \hline
-\end{tabular}
+\end{tabularx}
 \caption{Cost estimate}
 \end{table}
 
 \subsubsection{Time Estimates}
+Stage~1 spans 10 weeks (1 September -- 7 November 2026). With four developers at about three productive days per week, the available effort is $4 \times 10 \times 3 = 120$ person-days.
 \begin{table}[H]
 \centering
-\begin{tabular}{|l|c|c|}
+\begin{tabular}{|l|c|c|c|}
 \hline
-\textbf{Activity} & \textbf{Persons} & \textbf{Effort (person-days)} \\ \hline
-Contracts, repository setup (Day 1) & 4 & 2 \\ \hline
-Core backend, events and CRUD & 1 & 12 \\ \hline
-Hybrid RAG and policy files & 1 & 12 \\ \hline
-Agent, LLM client and Investigate UI & 1 & 12 \\ \hline
-Decision engine, security and infrastructure & 1 & 12 \\ \hline
-Integration, testing and demo preparation (Days 10--15) & 4 & 10 \\ \hline
-\textbf{Total for Stage~1} & & \textbf{about 60 (4 persons $\times$ 15 days)} \\ \hline
+\textbf{Activity} & \textbf{Weeks} & \textbf{Persons} & \textbf{Effort (person-days)} \\ \hline
+Contracts, repository, Docker and CI setup & 1 & 4 & 8 \\ \hline
+Core backend, events, risk scoring and CRUD (P1) & 2--8 & 1 & 24 \\ \hline
+Hybrid RAG and policy files (P2) & 2--8 & 1 & 24 \\ \hline
+Agent, OpenRouter client and Investigate UI (P3) & 2--8 & 1 & 24 \\ \hline
+Decision engine, security and infrastructure (P4) & 2--8 & 1 & 24 \\ \hline
+Integration, testing, reviews, demo and report (all) & 7--10 & 4 & 16 \\ \hline
+\textbf{Total for Stage~1} & \textbf{10} & & \textbf{120} \\ \hline
 \end{tabular}
 \caption{Effort estimate for Stage~1}
 \end{table}
@@ -635,7 +636,7 @@ Category & Requirements / Process \\ \hline
 Source & Project schedule review \\ \hline
 Probability / Impact & Medium / High \\ \hline
 Response & Mitigate \\ \hline
-Strategy & Data contracts frozen on Day~1; stubs for every public function; mini end-to-end check on Day~5; small pull requests with cross-area review \\ \hline
+Strategy & Data contracts frozen in Week~1; stubs for every public function; mini end-to-end check at the end of Week~3; small pull requests with cross-area review \\ \hline
 Risk status & Identified \\ \hline
 \end{tabularx}
 \caption{Risk 4 details}
@@ -679,47 +680,68 @@ Figure~\ref{fig:tasknet} shows the dependencies between the tasks.
 \end{figure}
 
 \subsection{Timeline chart}
-\textbf{Overall plan (from the approved synopsis, ten months).}
+\textbf{Stage~1 Gantt chart (weekly, 1 September -- 7 November 2026).}
 \newcommand{\gc}{\cellcolor{blue!35}}
+\begin{table}[H]
+\centering\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{|p{5.0cm}|*{10}{c|}}
+\hline
+\textbf{Activity} & W1 & W2 & W3 & W4 & W5 & W6 & W7 & W8 & W9 & W10 \\ \hline
+Literature review and problem definition & \gc & \gc & & & & & & & & \\ \hline
+Requirement analysis and threat modelling & \gc & \gc & & & & & & & & \\ \hline
+Architecture, data contracts, repository, CI & \gc & \gc & & & & & & & & \\ \hline
+Synthetic data generation and seeding & & \gc & \gc & \gc & & & & & & \\ \hline
+Events, rules, Isolation Forest, risk scoring & & \gc & \gc & \gc & \gc & & & & & \\ \hline
+Case, transaction and audit services & & & \gc & \gc & \gc & \gc & & & & \\ \hline
+Policy ingestion and hybrid retrieval & & & \gc & \gc & \gc & \gc & \gc & & & \\ \hline
+LangGraph agent and LLM client & & & & \gc & \gc & \gc & \gc & & & \\ \hline
+Decision engine, approvals, security & & & & \gc & \gc & \gc & \gc & \gc & & \\ \hline
+React console and Investigate screen & & & \gc & \gc & \gc & \gc & \gc & \gc & & \\ \hline
+Integration and simulator scenarios & & & & & & & \gc & \gc & \gc & \\ \hline
+Unit, integration and end-to-end testing & & & & \gc & \gc & \gc & \gc & \gc & \gc & \\ \hline
+Security tests and retrieval evaluation & & & & & & & & \gc & \gc & \\ \hline
+Demo, README and freeze & & & & & & & & & \gc & \gc \\ \hline
+Report writing and finalisation & \gc & \gc & \gc & \gc & \gc & \gc & \gc & \gc & \gc & \gc \\ \hline
+\textbf{Guide review} & & & R1 & & & R2 & & & & R3 \\ \hline
+\end{tabular}
+\caption{Stage~1 weekly activity plan (W1 starts on 1 September 2026; R = review with the guide)}
+\end{table}
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{Weeks} & \textbf{Dates (2026)} & \textbf{Work and milestone} \\ \hline
+1 & 1--5 Sep & All four together: freeze contracts, function signatures, routes and event types; repository, Docker and CI; commit stubs; everyone runs the stack \\ \hline
+2--3 & 7--19 Sep & Each owner builds their part against stubs and mock data; mini end-to-end check with stubs. \textbf{Review R1} (design and stubs) \\ \hline
+4--6 & 21 Sep -- 10 Oct & Replace stubs with real implementations; Isolation Forest trained on the synthetic data; UI wired to the real API. \textbf{Review R2} (working modules) \\ \hline
+7--8 & 12--24 Oct & Full integration: transaction $\rightarrow$ case $\rightarrow$ investigate $\rightarrow$ decide $\rightarrow$ approve $\rightarrow$ audit; tag \texttt{v0.1}; first retrieval evaluation \\ \hline
+9 & 26--31 Oct & Security tests, retrieval and detection evaluation, bug fixing \\ \hline
+10 & 2--7 Nov & Demo scenarios, README, report finalisation, freeze and tag \texttt{v1.0-phase1}. \textbf{Review R3} (demonstration) \\ \hline
+\end{tabularx}
+\caption{Stage~1 schedule}
+\end{table}
+
+\textbf{Overall plan (ten months, from September 2026).} Stage~1 ends at the start of November; the later stages extend the same code base as outlined in the future scope (Chapter~11).
 \begin{table}[H]
 \centering\footnotesize
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{|p{5.3cm}|*{10}{c|}}
 \hline
-\textbf{Activity} & M1 & M2 & M3 & M4 & M5 & M6 & M7 & M8 & M9 & M10 \\ \hline
-Literature review & \gc & \gc & & & & & & & & \\ \hline
-Requirement analysis, threat modelling & & \gc & & & & & & & & \\ \hline
-Architecture and data model design & & \gc & \gc & & & & & & & \\ \hline
-Synthetic data generation and seeding & & & \gc & & & & & & & \\ \hline
-Rule engine and Isolation Forest & & & \gc & \gc & & & & & & \\ \hline
-Transaction, case and audit services & & & & \gc & \gc & & & & & \\ \hline
-Knowledge ingestion and hybrid retrieval & & & & & \gc & \gc & & & & \\ \hline
-LangGraph agent and LLM gateway & & & & & & \gc & \gc & & & \\ \hline
-Typed assessment and policy engine & & & & & & & \gc & & & \\ \hline
-React dashboard and human review & & & & & & & \gc & \gc & & \\ \hline
-Simulator and demo scenarios & & & & & & & & \gc & & \\ \hline
-Unit, integration and end-to-end testing & & & & & & & & \gc & \gc & \\ \hline
-Security testing (injection, poisoning) & & & & & & & & & \gc & \\ \hline
-Documentation and research paper & & & & & & & & & \gc & \gc \\ \hline
+\textbf{Activity} & Sep & Oct & Nov & Dec & Jan & Feb & Mar & Apr & May & Jun \\ \hline
+\textbf{Stage~1:} design, detection, core services & \gc & \gc & & & & & & & & \\ \hline
+\textbf{Stage~1:} hybrid retrieval, agent, decision engine, UI & & \gc & \gc & & & & & & & \\ \hline
+\textbf{Stage~1:} integration, testing, demo (tag \texttt{v1.0-phase1}) & & \gc & \gc & & & & & & & \\ \hline
+Streaming and workers, richer detection & & & & \gc & \gc & & & & & \\ \hline
+Graph analytics and RAG improvements & & & & \gc & \gc & \gc & & & & \\ \hline
+Agent improvements and assessment providers & & & & & \gc & \gc & & & & \\ \hline
+Security hardening and red-team tests & & & & & & \gc & \gc & & & \\ \hline
+Evaluation and ablation experiments & & & & & & & \gc & \gc & & \\ \hline
+Documentation and research paper & & & & & & & & \gc & \gc & \\ \hline
 Report writing and finalisation & \gc & \gc & \gc & \gc & \gc & \gc & \gc & \gc & \gc & \gc \\ \hline
 \end{tabular}
 \caption{Ten-month activity plan}
-\end{table}
-
-\textbf{Stage~1 plan (15 working days).}
-\begin{table}[H]
-\centering
-\begin{tabularx}{\textwidth}{|l|X|}
-\hline
-\textbf{Days} & \textbf{Work} \\ \hline
-1 & All four together: freeze contracts, function signatures, routes and event types; commit stubs; everyone runs the stack \\ \hline
-2--5 & Each owner builds their part against stubs and mock data; Day~5 mini end-to-end check with stubs \\ \hline
-6--9 & Replace stubs with real implementations; wire the UI to the real API \\ \hline
-10--11 & Full integration: transaction $\rightarrow$ case $\rightarrow$ investigate $\rightarrow$ decide $\rightarrow$ approve $\rightarrow$ audit; tag \texttt{v0.1} \\ \hline
-12--13 & Security tests, retrieval evaluation, bug fixing \\ \hline
-14--15 & Demo scenarios, README, freeze, tag \texttt{v1.0-phase1} \\ \hline
-\end{tabularx}
-\caption{Stage~1 schedule}
 \end{table}
 
 \section{Team Organization}
@@ -965,7 +987,7 @@ AuditEntry & id, ts, actor, action, entityType, entityId, details, prevHash, has
 \end{figure}
 
 \subsection{Design Constraints}
-Synthetic data only; the language model cannot decide; all actions are simulated; each folder has a single owner and the data contracts are frozen after Day~1.
+Synthetic data only; the language model cannot decide; all actions are simulated; each folder has a single owner and the data contracts are frozen after Week~1.
 
 \subsection{Software Interface Description}
 \begin{itemize}
@@ -1310,7 +1332,7 @@ T14 & System & Run the four demo scenarios & Outcomes as in Section~8.4 & \todo{
 \chapter{Results}
 %===================================================================
 \section{Screenshots}
-The screenshots of the working system will be added here after integration (Days 10--15). Each placeholder below names the screen to capture.
+The screenshots of the working system will be added here after integration (Weeks 7--10). Each placeholder below names the screen to capture.
 \begin{figure}[H]
 \centering
 \fbox{\parbox[c][5cm][c]{0.85\textwidth}{\centering Case list and case detail with the Investigate panel\\ \todo{insert screenshot}}}
@@ -1431,7 +1453,7 @@ The next stage extends the Stage~1 code without changing its contracts:
 
 \chapter{Project Planner}
 \label{app:plan}
-The ten-month plan and the Stage~1 schedule are given in Section~\ref{sec:schedule}. \todo{attach the planner export if the guide asks for one}
+The overall plan and the Stage~1 week-by-week schedule are given in Section~\ref{sec:schedule}. \todo{attach the planner export if the guide asks for one}
 
 \chapter{Reviewers' Comments of Paper Submitted}
 \begin{enumerate}
