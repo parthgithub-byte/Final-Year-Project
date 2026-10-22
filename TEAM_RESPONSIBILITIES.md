@@ -491,14 +491,14 @@ The BE project report is in `docs/report/` (`main.tex`, `biblo.bib`, and a compi
 |---|---|
 | 1 Synopsis, 2 Technical keywords, 3 Introduction and literature survey, 4 Problem definition and scope, 5 Project plan | P1 (with everyone reviewing) |
 | 6 SRS and 7 Detailed design: data model, DFDs, ER diagram | P1 |
-| 8.3.2 Algorithm 2 (hybrid retrieval and RRF), retrieval results table | P2 |
-| 8.3.3 Algorithm 3 (bounded agent), agent screenshots | P3 |
-| 7.4 Decision function and audit chain, 8.4 Verification, 9 Testing (security tests), security results | P4 |
-| 8.3.1 Algorithm 1 (risk scoring and Isolation Forest), detection comparison table | P1 |
-| 10 Results (screenshots and numbers), 11 Conclusion and future scope | all, after integration (Days 10 to 15) |
+| 8.3.2 Algorithm 2 (hybrid retrieval and RRF) | P2 |
+| 8.3.3 Algorithm 3 (bounded agent) | P3 |
+| 7.4 Decision function and audit chain, 8.4 Verification, 9 Testing (security tests) | P4 |
+| 8.3.1 Algorithm 1 (risk scoring and Isolation Forest) | P1 |
+| 10 Conclusion and future scope | all, after integration |
 
 **Rules for the report**
-- Report only what was built and measured. Test results, screenshots and evaluation tables stay as `TODO` until real numbers exist; never invent them.
-- Names against roles (Section 5.4 of the report), the budget (Section 5.1.1) and the member pages are for the team to fill.
+- Report only what was built and measured. Test results stay as `TODO` until real numbers exist; never invent them.
+- The OpenRouter budget (Section 5.1.1), the test results (Table 9.1) and the member pages are for the team to fill.
 - If the implementation drifts from a chapter, change the chapter in the same pull request.
 - Use the same terms as the code: `searchKb`, `decide`, `Assessment`, `audit.log`.
