@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+*.log
+coverage/
+.vite/
+chroma_data/
+mongo_data/
+.cache/

@@ -1,0 +1,12 @@
+services:
+  mongo:
+    image: mongo:7
+    ports: ["27017:27017"]
+    volumes: ["mongo_data:/data/db"]
+  chroma:
+    image: chromadb/chroma:latest
+    ports: ["8000:8000"]
+    volumes: ["chroma_data:/data"]
+volumes:
+  mongo_data:
+  chroma_data:

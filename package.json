@@ -1,0 +1,22 @@
+{
+  "name": "fraud-agentic-rag",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev:infra": "docker compose up -d",
+    "dev:api": "npm run dev -w @fraud/api",
+    "dev:web": "npm run dev -w @fraud/web",
+    "seed": "node scripts/seed.js",
+    "simulate": "node scripts/simulator.js",
+    "eval:rag": "node scripts/eval-rag.js",
+    "test": "npm test --workspaces --if-present",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0"
+  }
+}
