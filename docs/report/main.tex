@@ -51,6 +51,9 @@
 \newcommand{\todo}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
 \newcommand{\projtitle}{Secure Hybrid Agentic RAG for Context-Aware Banking Fraud Investigation \& Decision Support}
 
+% logo with a maximum width and height (keeps aspect ratio) and a fallback box
+\newcommand{\logo}[3]{\IfFileExists{#1}{\includegraphics[width=#2,height=#3,keepaspectratio]{#1}}{\fbox{\parbox[c][#3][c]{#2}{\centering\footnotesize [\detokenize{#1} not found]}}}}
+
 % shared TikZ styles
 \tikzset{
   blk/.style={draw,rounded corners=2pt,fill=blue!8,align=center,font=\small,minimum width=30mm,minimum height=9mm},
@@ -83,31 +86,31 @@
 \thispagestyle{empty}
 \setlength{\parindent}{0mm}
 \begin{center}
-\vspace*{0\baselineskip}
 {\bfseries A PROJECT REPORT ON \\}
-\vspace*{2\baselineskip}
-{\bfseries \fontsize{16}{20}\selectfont \projtitle \\ \vspace*{2\baselineskip}}
-{\fontsize{12}{14}\selectfont SUBMITTED TOWARDS THE \\ PARTIAL FULFILLMENT OF THE REQUIREMENTS OF \\ \vspace*{2\baselineskip}}
-{\bfseries \fontsize{14}{16}\selectfont BACHELOR OF ENGINEERING (Computer Engineering) \\ \vspace*{1\baselineskip}}
-{\bfseries \fontsize{14}{16}\selectfont BY \\ \vspace*{1\baselineskip}}
+\vspace*{1.2\baselineskip}
+{\bfseries \fontsize{16}{20}\selectfont \projtitle \\ \vspace*{1.2\baselineskip}}
+{\fontsize{12}{14}\selectfont SUBMITTED TOWARDS THE \\ PARTIAL FULFILLMENT OF THE REQUIREMENTS OF \\ \vspace*{1.2\baselineskip}}
+{\bfseries \fontsize{14}{16}\selectfont BACHELOR OF ENGINEERING (Computer Engineering) \\ \vspace*{0.8\baselineskip}}
+{\bfseries \fontsize{14}{16}\selectfont BY \\ \vspace*{0.8\baselineskip}}
 \begin{tabular}{l l}
 Parth Pakhare    & \hspace{25mm} Roll No: BCOB15 \\
 Soham Sadakal    & \hspace{25mm} Roll No: BCOB32 \\
 Kaushal Pokarne  & \hspace{25mm} Roll No: BCOB33 \\
 Omkar Shelar     & \hspace{25mm} Roll No: BCOB64 \\
 \end{tabular}\\
-\vspace*{2\baselineskip}
-{\bfseries \fontsize{14}{16}\selectfont Under The Guidance of \\ \vspace*{1\baselineskip}
-Dr. Jyoti Shinde \\ \vspace*{2\baselineskip}}
-\safegraphic{DPU_DYP_Logo.png}{200pt} \\
-\vspace*{1\baselineskip}
-{\bfseries \fontsize{14}{16}\selectfont Department of Computer Engineering \\ \vspace*{1\baselineskip}
+\vspace*{1.2\baselineskip}
+{\bfseries \fontsize{14}{16}\selectfont Under The Guidance of \\ \vspace*{0.6\baselineskip}
+Dr. Jyoti Shinde \\ \vspace*{1.2\baselineskip}}
+\logo{DPU_DYP_Logo.png}{60mm}{22mm} \\
+\vspace*{0.8\baselineskip}
+{\bfseries \fontsize{14}{16}\selectfont Department of Computer Engineering \\ \vspace*{0.6\baselineskip}
 DR. D. Y. PATIL INSTITUTE OF TECHNOLOGY \\
 PIMPRI, PUNE \\
 A.Y. 2026-2027 \\}
-\vspace*{1\baselineskip}
-\safegraphic{UNI_LOGO.jpg}{100pt} \\
-{\bfseries SAVITRIBAI PHULE PUNE UNIVERSITY \\}
+\vspace*{0.8\baselineskip}
+\logo{UNI_LOGO.jpg}{25mm}{25mm} \\
+\vspace*{0.3\baselineskip}
+{\bfseries SAVITRIBAI PHULE PUNE UNIVERSITY}
 \end{center}
 
 %===================================================================
@@ -116,7 +119,7 @@ A.Y. 2026-2027 \\}
 \newpage
 \thispagestyle{empty}
 \begin{center}
-\safegraphic{DPU_DYP_Logo.png}{200pt}\\[1em]
+\logo{DPU_DYP_Logo.png}{60mm}{22mm}\\[1em]
 {\bfseries \fontsize{14}{16}\selectfont DR. D. Y. PATIL INSTITUTE OF TECHNOLOGY\\
 Department of Computer Engineering}\\[2em]
 {\bfseries \fontsize{16}{18}\selectfont CERTIFICATE}\\[2em]
