@@ -7,3 +7,13 @@ coverage/
 chroma_data/
 mongo_data/
 .cache/
+
+# LaTeX build artifacts
+docs/report/*.aux
+docs/report/*.log
+docs/report/*.out
+docs/report/*.toc
+docs/report/*.lof
+docs/report/*.lot
+docs/report/*.bbl
+docs/report/*.blg

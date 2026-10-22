@@ -63,7 +63,8 @@ Everything uses synthetic data and every action is simulated. Nothing touches a 
 | Agent | LangGraph.js | Explicit graph, step cap, easy to trace | Verifier node that checks claims against cited chunks |
 | Frontend | React, Vite, TanStack Query, Tailwind | Fast to build, good data fetching | Live events feed, evidence and policy side-by-side view |
 | Infra | Docker Compose, GitHub Actions | One command to start, CI on every PR | Health checks, coverage gates |
-| Quality | ESLint, Prettier, `node --test` | Minimal tooling | Add coverage reporting |
+| Quality | ESLint, Prettier, Vitest + Supertest | Unit and API tests (the brief's choice; the scaffold's health test uses `node --test`, P4 migrates it when adding CI) | Coverage reporting, integration tests with Docker profiles |
+| Anomaly model | In-process Isolation Forest (`packages/anomaly`, own implementation) | Unsupervised, no labels, no Python or extra service; the only trained model in the project | Scikit-learn parity check offline; swap behind `scoreAnomaly()` if needed |
 
 Key environment variables are in `.env.example`: `USE_FAKE_LLM=true` runs everything offline, `RISK_THRESHOLD` controls case creation, `AGENT_MAX_STEPS` caps the agent loop.
 
@@ -125,6 +126,8 @@ Key environment variables are in `.env.example`: `USE_FAKE_LLM=true` runs everyt
 
 ## 3. REST API (owned by P1 unless noted)
 
+All routes live under `/api/v1`. Responses use the envelope `{ data, error? }`; errors are `{ error: { code, message, details? } }`.
+
 | Method | Path | Owner | Purpose |
 |---|---|---|---|
 | GET | `/health` | P1 | Liveness (already implemented) |
@@ -164,6 +167,7 @@ apps/web/src/{App, routing, layout, api/client}, pages/{Cases, CaseDetail, Trans
    - `GET /events` with filters by type and date.
 4. **Risk scorer and auto-case creation:**
    - 6 to 10 deterministic rules as data (new beneficiary plus high amount, new device, velocity, amount versus customer average, odd hour, IP mismatch mock).
+   - **Isolation Forest (lightweight, optional):** `packages/anomaly` with `scoreAnomaly(features)`. About 100 to 150 lines: 100 trees, sample size 256, depth limit `ceil(log2 256)`, score `2^(-E[h]/c(n))`, seeded RNG, model saved as a versioned JSON file. If the file is missing or the feature list does not match, fall back to rules only (weight 0, visible degraded flag). Aggregate with `R = sum(w_j x_j) / sum(w_j)` over the available scores.
    - Consumer on `txn.created` -> compute `riskScore` (0..1) -> emit `txn.scored` -> create a Case if `riskScore >= RISK_THRESHOLD` -> emit `case.created`.
 5. **Seed script:** about 50 customers and 500 transactions with injected patterns (account takeover, mule, beneficiary fraud). Keep the ground-truth label in a separate field, used only for evaluation. Use a fixed random seed. Fictional names only.
 6. **Simulator:** emits demo transactions on an interval, with a flag to trigger a specific scenario.
@@ -189,7 +193,7 @@ apps/web/src/{App, routing, layout, api/client}, pages/{Cases, CaseDetail, Trans
 - [ ] Fresh clone -> `npm run seed` loads data
 - [ ] Posting a high-risk transaction automatically creates a case and emits events visible in the feed
 - [ ] All CRUD works from the UI with validation errors shown
-- [ ] Unit tests: risk scorer, validators, event publish/subscribe
+- [ ] Unit tests: risk scorer, Isolation Forest (seeded runs are deterministic, injected outliers rank above normal points), validators, event publish/subscribe
 - [ ] API tests for all CRUD routes
 
 ### Suggested timeline
@@ -448,3 +452,53 @@ P1 base -> P2 and P4 -> P3 -> UI wiring. Never merge a PR that breaks `develop`'
 - **P2:** Upload a file and get cited hybrid search results, with an eval table.
 - **P3:** Click Investigate and get a cited, schema-valid assessment, offline and online.
 - **P4:** Deterministic, versioned decisions with approvals, all security tests green, and an audit chain that verifies.
+
+---
+
+## 11. Phase 2 outlook (from `PHASE2_BRIEF.md`)
+
+Phase 2 starts after `v1.0-phase1`. It extends the Phase 1 code and keeps its contracts (additive changes only). The goal is a credible, measured research system. Nothing here is Phase 1 work, so do not build it early; just avoid choices that block it (keep the event bus, vector store, anomaly scorer and assessment provider behind interfaces).
+
+| Person | Phase 2 focus |
+|---|---|
+| P1 | Kafka-compatible streaming (Redpanda) with ingest, scoring and investigation workers, idempotent consumers, dead-letter queues; feature pipeline; drift monitoring (PSI); 50,000-transaction seed |
+| P2 | RAG v2 (query rewriting, optional reranking, trust tiers, case memory); graph analytics (graphology, components, community detection, `networkScore`, `getNetwork`) and the graph UI |
+| P3 | Agent v2 (planner, self-critique, claim-level citations, traces); `AssessmentProvider` interface with `llm`, `rules` baseline and a named provider; compare view |
+| P4 | Real auth (JWT), injection classifier, ingest-time scanning, red-team harness with attack success rate, evaluation and ablation framework, observability, CI and deploy profiles |
+
+**Decisions already taken**
+- The only trained model is the Isolation Forest, in-process in Node. No supervised classifier, no fine-tuning, no Python service.
+- If the guide drops Isolation Forest, delete `packages/anomaly`. Nothing else depends on it, because the aggregator gives a missing anomaly score weight 0.
+
+**Open questions (decide in week 1 of Phase 2)**
+1. What is the "TypeSafe Jev System One" named in the synopsis (API, library or model)? Until it is identified, the `named` provider proxies to `rules`. The report does not name it.
+2. Redpanda or Kafka, and can every laptop run it?
+3. May a public benchmark dataset be used next to the synthetic data?
+4. Who labels the 50-case sample, and which venue or report format is targeted?
+5. What is the OpenRouter budget for evaluation runs?
+
+---
+
+## 12. Project report (LaTeX)
+
+The BE project report is in `docs/report/` (`main.tex`, `biblo.bib`, and a compiled `main.pdf`). It follows the department template and covers Stage 1 plus the future scope.
+
+**Build:** `pdflatex main && bibtex main && pdflatex main && pdflatex main` (or upload the folder to Overleaf). Missing logo and photo files show a labelled box, so it always compiles. Put `DPU_DYP_Logo.png`, `UNI_LOGO.jpg` and `photo.jpg` next to `main.tex` when available.
+
+**Who writes what.** Each person keeps their chapters accurate as the code changes and fills the red `TODO` items for their area.
+
+| Chapters | Owner |
+|---|---|
+| 1 Synopsis, 2 Technical keywords, 3 Introduction and literature survey, 4 Problem definition and scope, 5 Project plan | P1 (with everyone reviewing) |
+| 6 SRS and 7 Detailed design: data model, DFDs, ER diagram | P1 |
+| 8.3.2 Algorithm 2 (hybrid retrieval and RRF), retrieval results table | P2 |
+| 8.3.3 Algorithm 3 (bounded agent), agent screenshots | P3 |
+| 7.4 Decision function and audit chain, 8.4 Verification, 9 Testing (security tests), security results | P4 |
+| 8.3.1 Algorithm 1 (risk scoring and Isolation Forest), detection comparison table | P1 |
+| 10 Results (screenshots and numbers), 11 Conclusion and future scope | all, after integration (Days 10 to 15) |
+
+**Rules for the report**
+- Report only what was built and measured. Test results, screenshots and evaluation tables stay as `TODO` until real numbers exist; never invent them.
+- Names against roles (Section 5.4 of the report), the budget (Section 5.1.1) and the member pages are for the team to fill.
+- If the implementation drifts from a chapter, change the chapter in the same pull request.
+- Use the same terms as the code: `searchKb`, `decide`, `Assessment`, `audit.log`.
